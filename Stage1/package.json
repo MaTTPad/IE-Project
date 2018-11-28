@@ -1,0 +1,21 @@
+{
+  "name": "project-template",
+  "version": "1.0.0",
+  "description": "Wzor projektu zaliczeniowego dla Inzynierii Internetu",
+  "main": "src",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon --inspect=9229 -i \"*.test.js\" ."
+  },
+  "author": "Krzysztof Bzowski <kbzowski@agh.edu.pl>",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "mongoose": "5.3.10"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
+}
