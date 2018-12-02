@@ -1,5 +1,6 @@
 // Tu definiujemy funkcje obslugujace routing
 const Carmodel = require('./model').model
+const Usermodel=require('../user/model').model
 //is2018
 //is2018ie
 const {success, notFound} = require('../../services/response/')
@@ -61,15 +62,23 @@ const createReservationForCarId = ({body, params}, res, next) => {
 
     Carmodel.findByIdAndUpdate(params.id,  { "$push": { "reservations": {"pick_up_date": pick_up_date, "drop_off_date":drop_off_date, "user_id": user_id} }},
         { "new": true, "upsert": true }//,
-        // function (err, managerparent) {
-        //     if (err) throw err;
-        //     console.log(managerparent);
-        // }
+       // function (err, managerparent) {
+         //    if (err) throw err;
+           //  console.log(managerparent);
+         //}
     )
         .then(notFound(res))
         //.then((carmodel) => carmodel ? Object.assign(carmodel, body).save() : null)
-     //   .then((carmodel) => carmodel ? carmodel.view(true) : null)
+        //.then((carmodel) => carmodel ? carmodel.view(true) : null)
         .then(success(res))
+
+        Usermodel.findByIdAndUpdate(user_id,{ "$push": { "reservedCars": {"car_id": params.id} }},
+        { "new": true, "upsert": true }//,
+       //  function (err, managerparent) {
+         //    if (err) throw err;
+           //  console.log(managerparent);
+         //}
+    )
         .catch(next)
 
 

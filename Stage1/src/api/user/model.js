@@ -14,7 +14,11 @@ const usermodelSchema = new Schema({
     },
     drivingLicenseNumber: {
         type: Number
-    }
+    },
+    reservedCars: [
+        {
+            car_id: {type:mongoose.Schema.Types.ObjectId, required: false, ref:'Car'}
+        }],
 }, {
     timestamps: true,
 })
@@ -31,6 +35,7 @@ usermodelSchema.methods = {
                 name: this.name,
                 lastname: this.lastname,
                 drivingLicenseNumber: this.drivingLicenseNumber,
+                reservedCars: this.reservedCars,
                 createdAt: this.createdAt,
                 updatedAt: this.updatedAt
             }
