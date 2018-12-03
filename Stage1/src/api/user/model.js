@@ -1,62 +1,88 @@
+const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
-const {Schema} = require('mongoose')
+const roles = ['user', 'admin']
+const Carmodel = require('../car/model').model
 
-// https://mongoosejs.com/docs/schematypes.html
-const usermodelSchema = new Schema({
-    name: {
+const Schema = mongoose.Schema
+const userSchema = new Schema({
+    email: {
+        type: String,
+        match: /^\S+@\S+\.\S+$/,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true
+    },
+    password: {
         type: String,
         required: true,
-        index: {unique: true}
+        minlength: 6
     },
-    lastname: {
+    name: {
         type: String,
+        trim: true,
         required: true
     },
-    drivingLicenseNumber: {
-        type: Number
+    role: {
+        type: String,
+        enum: roles,
+        default: 'user'
     },
-    reservedCars: [
-        {
-            car_id: {type:mongoose.Schema.Types.ObjectId, required: false, ref:'Car'}
-        }],
+    reservations: {
+        type: [Schema.ObjectId],
+        ref: 'Reservation',
+    }
 }, {
-    timestamps: true,
+    timestamps: true
 })
 
-usermodelSchema.methods = {
+userSchema.pre('save', function (next) {
+    if (!this.isModified('password')) return next()
+
+    const rounds = 9
+
+    bcrypt.hash(this.password, rounds).then((hash) => {
+        this.password = hash
+        next()
+    }).catch(next)
+})
+
+
+userSchema.methods = {
     view(full) {
+        let view = {}
+        let fields = ['id', 'name',]
 
-        if(full==true)
-        {
-
-            const view = {
-                // simple view
-                id: this._id,
-                name: this.name,
-                lastname: this.lastname,
-                drivingLicenseNumber: this.drivingLicenseNumber,
-                reservedCars: this.reservedCars,
-                createdAt: this.createdAt,
-                updatedAt: this.updatedAt
-            }
-            return view;
-
-        }
-        else
-        {
-            const view = {
-                // simple view
-                id: this._id,
-                name: this.name
-            }
-            return view;
-
+        if (full) {
+            fields = [...fields, 'role', 'email', 'reservations']
         }
 
+        fields.forEach((field) => {
+            view[field] = this[field]
+        })
+
+        return view
+    },
+
+    authenticate(password) {
+        return bcrypt.compare(password, this.password).then((valid) => valid ? this : false)
+    },
+
+    async getReservations() {
+        let reservedCars = []
+        for(const r of this.reservations){
+            reservedCars.push(Carmodel.find({'reservations._id': r}).exec())
+        }
+        return await Promise.all(reservedCars)
     }
+
+
 }
 
-const model = mongoose.model('User', usermodelSchema)
+userSchema.statics = {
+    roles
+}
 
-module.exports = {model, usermodelSchema}
+const model = mongoose.model('User', userSchema)
 
+module.exports = {model, userSchema}

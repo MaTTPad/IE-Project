@@ -1,42 +1,45 @@
-// Tu definiujemy routing i go exportujemy
-
+const {token} = require("../../services/passport")
 const { Router } = require('express')
-const { createCar,showCars,updateCarById, showCarById ,destroyCarById,createReservationForCarId,showReservationByUserId,destroyReservationByUserId} = require('./controller')
+const { create, index, show, update, destroy, search} = require('./controller')
+const { createReservation, indexReservation, destroyReservation} = require('./controller-reservations')
 
 const router = new Router()
-// Routing dopasowuje sciezki w kolejnosci deklaracji
-// Wiec najpierw deklarujemy ogólnie, a potem szczegolowe, np: /action, /action/:id, /action/:id/filter
-// Podobnie, jesli dajemy opcje zadanej wartosci parametru dynamicznego, np. /action/me, /action/:id
 
-// Dobre API ma ustandaryzowane podejście do żądań.
-// https://restful-api-design.readthedocs.io/en/latest/methods.html
 router.post('/',
-    createCar)
+  create)
 
 router.get('/',
-    showCars)
+  index)
 
-//router.get('/freecars',
- //   showFreeCars)
+router.get('/search/',
+    search)
 
 router.get('/:id',
-    showCarById)
+  show)
 
 router.put('/:id',
-    updateCarById)
+  update)
 
 router.delete('/:id',
-    destroyCarById)
+  destroy)
 
-router.put('/:id/reservation',
-    createReservationForCarId)
+// Reservations
+router.get('/:id/reservations',
+    token({ required: true }),
+    indexReservation
+)
 
-router.get('/:id/reservation/:userID',
-    showReservationByUserId)
+router.post('/:id/reservations',
+    token({ required: true }),
+    createReservation
+)
 
-router.delete('/:id/reservation/:userID',
-    destroyReservationByUserId)
+router.delete('/:id/reservations/:reservationId',
+    token({ required: true }),
+    destroyReservation
+)
 
-	
+//
+
 
 module.exports = router

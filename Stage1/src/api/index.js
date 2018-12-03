@@ -1,29 +1,26 @@
-// Plik centralny API - tu importujemy enpointy (index.js) z poszczegolnych katalogow
-const {Router} = require('express')
-const car = require('./car')
+const { Router } = require('express')
+const carmodel = require('./car')
 const user = require('./user')
+const _ = require('lodash')
 
-// Routing
 const router = new Router()
-router.use('/car', car)
-router.use('/user', user)
-// Inny routing idzie tutaj
+
+router.use('/cars', carmodel)
+router.use('/users', user)
 
 // 404 Error handler
-router.use((req, res, next) =>  res.status(404).send({error: 'Routing not found'}))
+router.use((req, res, next) =>  res.status(404).send({errors: ['Routing not found']}))
 
-// 500 Error handler
-// Dobra aplikacja NIGDY tego nie uzyje
+// Error handler
 router.use((err, req, res, next) =>  {
-    console.error(err.stack)
-    res.status(500).send({error: 'Server error'})
+    if(err.name === 'ValidationError'){
+        const errors = _.map(err.errors, (v) => v.message )
+        return res.status(400).send({errors})
+    }
+
+    console.error(err)
+    res.status(500).send({errors: ['Application error']})
 })
 
 
-//console.log(typeof routerCar)
-//module.exports =  {routerCar , routerUser}
-
-
-module.exports = router;
-
-//module.exports= routerCar
+module.exports = router

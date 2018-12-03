@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
-const { mongo } = require('../../config')
+const { mongo, env } = require('../../config')
 
 for(const key in mongo.options){
     mongoose.set(key, mongo.options[key]);
 }
 
 mongoose.connection.on('connected', (res) => {
-    console.log('MongoDB connected successfully')
+    if(env === 'development') console.log('MongoDB connected successfully')
 })
 
 

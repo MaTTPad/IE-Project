@@ -1,30 +1,40 @@
-// Tu definiujemy routing i go exportujemy
-
 const { Router } = require('express')
-const {addUser,showUsers,showUserByID,updateUserByID,destroyUserByID} = require('./controller')
+const { token, password } = require('../../services/passport')
+const {index, showMe, show, create, update, destroy, auth, showMyReservations} = require('./controller')
 
 const router = new Router()
-// Routing dopasowuje sciezki w kolejnosci deklaracji
-// Wiec najpierw deklarujemy ogólnie, a potem szczegolowe, np: /action, /action/:id, /action/:id/filter
-// Podobnie, jesli dajemy opcje zadanej wartosci parametru dynamicznego, np. /action/me, /action/:id
 
-// Dobre API ma ustandaryzowane podejście do żądań.
-// https://restful-api-design.readthedocs.io/en/latest/methods.html
-
-router.post('/',
-    addUser)
 
 router.get('/',
-    showUsers)
+  token({ required: true, roles: ['admin'] }),
+  index)
+
+router.get('/me',
+  token({ required: true }),
+  showMe)
+
+router.get('/me/reservations',
+  token({required: true}),
+    showMyReservations)
 
 router.get('/:id',
-    showUserByID)
+  token({ required: true, roles: ['admin'] }),
+  show)
 
-router.put('/:id/',
-    updateUserByID)
+router.post('/',
+  create)
+
+router.post('/auth',
+    password(),
+    auth)
+
+router.put('/',
+  token({ required: true }),
+  update)
 
 router.delete('/:id',
-    destroyUserByID)
-	
+  token({ required: true, roles: ['admin'] }),
+  destroy)
 
 module.exports = router
+

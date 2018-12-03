@@ -1,11 +1,8 @@
-// Tu definiujemy model bazodanowy
-
 const mongoose = require('mongoose')
-const { Schema } = require('mongoose')
-//const Dimensions = require('./model-dimensions').dimensionsSchema
+const {Schema} = require('mongoose')
+const Reservation = require('./model-reservation').reservationSchema
 
 const carmodelSchema = new Schema({
-
     manufacturer: {
         type: String,
         required: true
@@ -26,19 +23,15 @@ const carmodelSchema = new Schema({
         type: String,
         required: false
     },
-    reservations: [
-        {
-            pick_up_date: {type: Date, required: true},
-            drop_off_date: {type: Date, required: true},
-            user_id: {type:mongoose.Schema.Types.ObjectId , required: false, ref:'User'}
-        }],
-
+    reservations: {
+        type: [Reservation]
+    }
 }, {
     timestamps: true,
 })
 
 carmodelSchema.methods = {
-    view (full) {
+    view(full) {
         const view = {
             // simple view
             id: this._id,
@@ -51,11 +44,7 @@ carmodelSchema.methods = {
             ...view,
             doors: this.doors,
             class: this.class,
-            /*reservations:[
-                pick_up_date: this.pick_up_date,
-                drop_off_date: this.drop_off_date
-            ]*/
-            reservations:this.reservations,
+            reservations: this.reservations,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt
         } : view
@@ -65,4 +54,3 @@ carmodelSchema.methods = {
 const model = mongoose.model('Car', carmodelSchema)
 
 module.exports = {model, carmodelSchema}
-

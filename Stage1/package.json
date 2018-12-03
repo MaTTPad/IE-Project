@@ -5,17 +5,28 @@
   "main": "src",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon --inspect=9229 -i \"*.test.js\" ."
+    "dev": "nodemon --inspect=9229 -i \"*.test.js\" .",
+    "test": "cross-env NODE_ENV=test mocha --timeout 15000 --exit src/tests.js"
   },
   "author": "Krzysztof Bzowski <kbzowski@agh.edu.pl>",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
-    "mongoose": "5.3.10"
+    "mongoose": "^5.3.10",
+    "nodemailer": "^4.7.0",
+    "passport": "^0.4.0",
+    "passport-http": "^0.3.0",
+    "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "cross-env": "^5.2.0",
+    "mocha": "^5.2.0",
     "nodemon": "^1.18.4"
   }
 }
