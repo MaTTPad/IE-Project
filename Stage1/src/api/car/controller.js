@@ -1,26 +1,26 @@
 const { success, notFound } = require('../../services/response/')
 const Carmodel = require('./model').model
 
-const create = ({ body }, res, next) =>
+const createCar = ({ body }, res, next) =>
   Carmodel.create(body)
     .then((carmodel) => carmodel.view(true))
     .then(success(res, 201))
     .catch(next)
 
-const index = (req, res, next) =>
+const showAllCars = (req, res, next) =>
   Carmodel.find()
     .then((carmodels) => carmodels.map((carmodel) => carmodel.view()))
     .then(success(res))
     .catch(next)
 
-const show = ({ params }, res, next) =>
+const showCarById = ({ params }, res, next) =>
   Carmodel.findById(params.id)
     .then(notFound(res))
     .then((carmodel) => carmodel ? carmodel.view(true) : null)
     .then(success(res))
     .catch(next)
 
-const update = ({ body , params }, res, next) =>
+const updateCarById = ({ body , params }, res, next) =>
   Carmodel.findById(params.id)
     .then(notFound(res))
     .then((carmodel) => carmodel ? Object.assign(carmodel, body).save() : null)
@@ -28,7 +28,7 @@ const update = ({ body , params }, res, next) =>
     .then(success(res))
     .catch(next)
 
-const destroy = ({ params }, res, next) =>
+const deleteCarById = ({ params }, res, next) =>
   Carmodel.findById(params.id)
     .then(notFound(res))
     .then((carmodel) => carmodel ? carmodel.remove() : null)
@@ -61,5 +61,5 @@ const search = ({query}, res, next) => {
     }
 
 module.exports = {
-    create, index, show, update, destroy, search
+    createCar, showAllCars, showCarById, updateCarById, deleteCarById, search
 }

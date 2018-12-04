@@ -1,32 +1,32 @@
 const {token} = require("../../services/passport")
 const { Router } = require('express')
-const { create, index, show, update, destroy, search} = require('./controller')
-const { createReservation, indexReservation, destroyReservation} = require('./controller-reservations')
+const { createCar, showAllCars, showCarById, updateCarById, deleteCarById, search} = require('./controller')
+const { createReservation, showReservationByCarId, destroyReservation} = require('./controller-reservations')
 
 const router = new Router()
 
 router.post('/',
-  create)
+  createCar)
 
 router.get('/',
-  index)
+  showAllCars)
 
 router.get('/search/',
     search)
 
 router.get('/:id',
-  show)
+  showCarById)
 
 router.put('/:id',
-  update)
+  updateCarById)
 
 router.delete('/:id',
-  destroy)
+  deleteCarById)
 
 // Reservations
 router.get('/:id/reservations',
     token({ required: true }),
-    indexReservation
+    showReservationByCarId
 )
 
 router.post('/:id/reservations',

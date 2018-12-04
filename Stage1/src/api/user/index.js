@@ -1,13 +1,13 @@
 const { Router } = require('express')
 const { token, password } = require('../../services/passport')
-const {index, showMe, show, create, update, destroy, auth, showMyReservations} = require('./controller')
+const {showAllUsers, showMe, showUserById, createUser, updateUserById, deleteUserById, auth, showMyReservations} = require('./controller')
 
 const router = new Router()
 
 
 router.get('/',
   token({ required: true, roles: ['admin'] }),
-  index)
+  showAllUsers)
 
 router.get('/me',
   token({ required: true }),
@@ -19,10 +19,10 @@ router.get('/me/reservations',
 
 router.get('/:id',
   token({ required: true, roles: ['admin'] }),
-  show)
+  showUserById)
 
 router.post('/',
-  create)
+  createUser)
 
 router.post('/auth',
     password(),
@@ -30,11 +30,11 @@ router.post('/auth',
 
 router.put('/',
   token({ required: true }),
-  update)
+  updateUserById)
 
 router.delete('/:id',
   token({ required: true, roles: ['admin'] }),
-  destroy)
+  deleteUserById)
 
 module.exports = router
 

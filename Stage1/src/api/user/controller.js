@@ -5,13 +5,13 @@ const { sign } = require('../../services/jwt')
 const _ = require('lodash')
 const catchDuplicateEmail = require("./helpers").catchDuplicateEmail;
 
-const index = (req, res, next) =>
+const showAllUsers = (req, res, next) =>
   User.find()
     .then((users) => users.map((user) => user.view()))
     .then(success(res))
     .catch(next)
 
-const show = ({ params }, res, next) =>
+const showUserById = ({ params }, res, next) =>
   User.findById(params.id)
     .then(notFound(res))
     .then((user) => user ? user.view(true) : null)
@@ -54,7 +54,7 @@ const showMe = ({ user }, res, next) => {
     res.json(user.view(true))
 }
 
-const create = ({ body }, res, next) => {
+const createUser = ({ body }, res, next) => {
   User.create(body)
     .then(user => {
       sign(user)
@@ -75,7 +75,7 @@ const auth = (req, res, next) => {
         .catch(next)
 }
 
-const update = ({ body , user }, res, next) =>
+const updateUserById = ({ body , user }, res, next) =>
   User.findById(user.id)
     .then(notFound(res))
     .then((user) => user ? Object.assign(user, body).save() : null)
@@ -83,7 +83,7 @@ const update = ({ body , user }, res, next) =>
     .then(success(res))
       .catch((err) => catchDuplicateEmail(res, err, next))
 
-const destroy = ({ params }, res, next) =>
+const deleteUserById = ({ params }, res, next) =>
   User.findById(params.id)
     .then(notFound(res))
     .then((user) => user ? user.remove() : null)
@@ -91,6 +91,6 @@ const destroy = ({ params }, res, next) =>
     .catch(next)
 
 module.exports = {
-    create, index, show, update, destroy, showMe, auth, showMyReservations
+    createUser, showAllUsers, showUserById, updateUserById, deleteUserById, showMe, auth, showMyReservations
 }
 

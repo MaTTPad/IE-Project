@@ -65,7 +65,7 @@ console.log(pick_up_date)
 
 }
 
-const indexReservation = (req, res, next) => {
+const showReservationByCarId = (req, res, next) => {
     Carmodel.findById(req.params.id)
         .populate('reservations.user', '_id name email')
         .then(notFound(res))
@@ -107,5 +107,5 @@ const destroyReservation = async (req, res, next) => {
 }
 
 module.exports = {
-    createReservation, indexReservation, destroyReservation
+    createReservation, showReservationByCarId, destroyReservation
 }
