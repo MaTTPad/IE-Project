@@ -17,15 +17,38 @@ console.log(pick_up_date)
 
     const reservationId = ObjectId()        // albo nadamy ID sami, albo pobierzemy je potem z tablicy
 
-    // Sprawdz daty
-    const fromDate = new Date(pick_up_date)
-    const toDate = new Date(drop_off_date)
 
-    if(toDate.getTime() <= fromDate.getTime())
+
+
+    // Sprawdz daty
+    const newPickUpDate = new Date(pick_up_date)
+    const newDropOffDate = new Date(drop_off_date)
+
+    for (var i = 0; i < car.reservations.length; i++) {
+        var tempCar = car.reservations[i];
+        if(tempCar.pick_up_date.getTime()<=newPickUpDate.getTime() && tempCar.drop_off_date.getTime()>=newDropOffDate.getTime())
+        {
+            return res.status(400).json({errors: ['This car is already rented. Choose another date.']});
+        }
+        else if(tempCar.pick_up_date.getTime()<=newPickUpDate.getTime() && tempCar.drop_off_date.getTime()>=newPickUpDate.getTime())
+        {
+            return res.status(400).json({errors: ['This car is already rented. Choose another date.']});
+        }
+        else if(tempCar.pick_up_date.getTime()>=newPickUpDate.getTime() && tempCar.pick_up_date.getTime()>=newDropOffDate.getTime())
+        {
+            return res.status(400).json({errors: ['This car is already rented. Choose another date.']});
+        }
+        else if(tempCar.pick_up_date.getTime()>=newPickUpDate.getTime() && tempCar.drop_off_date.getTime()>=newDropOffDate.getTime())
+        {
+            return res.status(400).json({errors: ['This car is already rented. Choose another date.']});
+        }
+            }
+
+    if(newDropOffDate.getTime() <= newPickUpDate.getTime())
         return res.status(400).json({errors: ['The end date must be greater than or equal to the rental date.']});
 
     const now = new Date()
-    if(fromDate.getTime() <= now.getTime())
+    if(newPickUpDate.getTime() <= now.getTime())
         return res.status(400).json({errors: ['It is not possible to rent a car from the past']});
 
     try {
