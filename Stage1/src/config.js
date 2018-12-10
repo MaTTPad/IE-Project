@@ -28,7 +28,7 @@ const config = {
     },
     test: {
         mongo: {
-            uri: 'mongodb://admin:zaq12wsx@ds161653.mlab.com:61653/carrental',
+            uri: 'mongodb://admin:admin123@ds129914.mlab.com:29914/carrental_test',
         },
         jwtSecret: '4rrfdutpOntGGOVYLdG6hiOQf4v7dY'
     },

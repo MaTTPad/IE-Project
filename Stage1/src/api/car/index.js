@@ -6,10 +6,12 @@ const { createReservation, showReservationByCarId, destroyReservation} = require
 const router = new Router()
 
 router.post('/',
-  createCar)
+    token({ required: true, roles: ['admin'] }),
+    createCar)
 
 router.get('/',
-  showAllCars)
+    token({ required: true, roles: ['admin'] }),
+    showAllCars)
 
 router.get('/search/',
     search)
@@ -18,10 +20,12 @@ router.get('/:id',
   showCarById)
 
 router.put('/:id',
-  updateCarById)
+    token({ required: true, roles: ['admin'] }),
+    updateCarById)
 
 router.delete('/:id',
-  deleteCarById)
+    token({ required: true, roles: ['admin'] }),
+    deleteCarById)
 
 // Reservations
 router.get('/:id/reservations',
