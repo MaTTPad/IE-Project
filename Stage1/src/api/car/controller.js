@@ -42,20 +42,20 @@ const search = ({query}, res, next) => {
             case 'model':
                 dbquery.push({"model": {$regex: new RegExp(`${query['model']}`), $options: 'i'}})
                 break;
-            case 'yearmin':
+           /* case 'yearmin':
                 dbquery.push({"year": {$gte: parseInt(query['yearmin']) }})
                 break;
             case 'yearmax':
                 dbquery.push({"year": {$lte: parseInt(query['yearmax']) }})
-                break;
+                break;*/
         }
     }
 
     if(dbquery.length === 0) return res.json([])
 
-    return Carmodel.find({$and : dbquery}).sort({year: -1}).limit(10)
+    return Carmodel.find({$and : dbquery}).sort({model: -1}).limit(10)
         .then(notFound(res))
-        .then((carmodel) => carmodel ? carmodel.map(carmodel => carmodel.view(true)) : null)
+        .then((carmodel) => carmodel ? carmodel.map(carmodel => carmodel.view(false)) : null)
         .then(success(res))
         .catch(next)
     }
