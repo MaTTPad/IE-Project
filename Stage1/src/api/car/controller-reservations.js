@@ -8,10 +8,7 @@ const createReservation = async (req, res, next) => {
     const {pick_up_date, drop_off_date} = req.body
     const user = req.user
     const {id} = req.params
-console.log(pick_up_date)
-    console.log(drop_off_date)
-    //console.log(id)
-   // console.log(user)
+
     let car = await Carmodel.findById(id).exec()
     if(car === null) return notFound(res)(car)          // wykorzystujemy te same funckje pomocnicze co poprzednio w Promisach
 
@@ -43,7 +40,6 @@ console.log(pick_up_date)
             return res.status(400).json({errors: ['This car is already rented. Choose another date.']});
         }
     }
-    console.log("Wojtek");
 
     if(newDropOffDate.getTime() <= newPickUpDate.getTime())
         return res.status(400).json({errors: ['The end date must be greater than or equal to the rental date.']});

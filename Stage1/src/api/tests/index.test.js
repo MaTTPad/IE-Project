@@ -27,7 +27,8 @@ describe('User and car test', () => {
         it('It should register user.', (done) => {
             let user = {
                 email: 'test@gmail.com',
-                name: 'Jan Kowalski',
+                name: 'Jan',
+                lastname:'Kowalski',
                 role: 'admin',
                 password: '123456789'
             }
@@ -41,7 +42,8 @@ describe('User and car test', () => {
                     res.body.should.have.property('token');
                     res.body.should.have.property('user');
                     res.body.user.should.have.property('id');
-                    res.body.user.should.have.property('name').equal('Jan Kowalski');
+                    res.body.user.should.have.property('name').equal('Jan');
+                    res.body.user.should.have.property('lastname').equal('Kowalski');
                     res.body.user.should.have.property('email').equal('test@gmail.com');
                     res.body.user.should.have.property('reservations');
                     res.body.user.reservations.should.be.an('array').to.be.empty;
@@ -135,6 +137,27 @@ describe('User and car test', () => {
                 });
         });
     });
+
+    describe('POST /api/cars/:id/reservations', () => {
+        it('It should add new reservation.', (done) => {
+            let reservation = {
+                pick_up_date: "Janary 24, 2019 03:00:01",
+                drop_off_date: "January 28, 2019 09:00:00"
+            }
+
+            chai.request(server)
+                .post('/api/cars/'+carID+'/createReservation')
+                .set('Authorization', `Bearer ${token}`)
+                .send(reservation)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.an('array');
+                    res.body[0].should.have.property('id');
+
+                    done();
+                });
+        });
+    })
 
 
 
