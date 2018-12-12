@@ -13,7 +13,8 @@ const carmodelSchema = new Schema({
     },
     VIN: {
         type: String,
-        required: true
+        required: true,
+        unique:true
     },
     doors: {
         type: Number,

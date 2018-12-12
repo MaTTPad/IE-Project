@@ -5,6 +5,16 @@ const Carmodel = require('../car/model').model
 
 const Schema = mongoose.Schema
 const userSchema = new Schema({
+    name: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    lastname: {
+        type: String,
+        trim:true,
+        required: true
+    },
     email: {
         type: String,
         match: /^\S+@\S+\.\S+$/,
@@ -18,11 +28,7 @@ const userSchema = new Schema({
         required: true,
         minlength: 6
     },
-    name: {
-        type: String,
-        trim: true,
-        required: true
-    },
+
     role: {
         type: String,
         enum: roles,
@@ -51,7 +57,7 @@ userSchema.pre('save', function (next) {
 userSchema.methods = {
     view(full) {
         let view = {}
-        let fields = ['id', 'name',]
+        let fields = ['id', 'name','lastname']
 
         if (full) {
             fields = [...fields, 'role', 'email', 'reservations']

@@ -33,7 +33,7 @@ router.get('/:id/reservations',
     showReservationByCarId
 )
 
-router.post('/:id/reservations',
+router.post('/:id/createReservation',
     token({ required: true }),
     createReservation
 )
