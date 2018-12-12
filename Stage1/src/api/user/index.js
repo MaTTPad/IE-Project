@@ -10,11 +10,11 @@ router.get('/',
   showAllUsers)
 
 router.get('/me',
-  token({ required: true }),
+  token({ required: true, groups: ['onlineUser'] }),
   showMe)
 
 router.get('/me/reservations',
-  token({required: true}),
+  token({required: true,groups: ['onlineUser']}),
     showMyReservations)
 
 router.get('/:id',

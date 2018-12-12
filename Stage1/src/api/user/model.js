@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const roles = ['user', 'admin']
+const groups=['onlineUser', 'localUser']
 const Carmodel = require('../car/model').model
 
 const Schema = mongoose.Schema
@@ -33,6 +34,11 @@ const userSchema = new Schema({
         type: String,
         enum: roles,
         default: 'user'
+    },
+    group: {
+        type: String,
+        enum: groups,
+        default: 'onlineUser'
     },
     reservations: {
         type: [Schema.ObjectId],
@@ -86,7 +92,7 @@ userSchema.methods = {
 }
 
 userSchema.statics = {
-    roles
+    roles, groups
 }
 
 const model = mongoose.model('User', userSchema)

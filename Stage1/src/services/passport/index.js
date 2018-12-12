@@ -34,14 +34,14 @@ const password = () => (req, res, next) =>
     })(req, res, next)
 
 // Middleware dla tokenu JWT
-const token = ({required, roles = User.roles} = {}) => (req, res, next) =>
+const token = ({required, roles = User.roles, groups=User.groups} = {}) => (req, res, next) =>
     passport.authenticate('token', {session: false}, (err, user, info) => {
         // jesli nie ma uzytkownika w bazie lub niepodano tokenu => 401
         if (err || (required && !user)) {
             return res.status(401).end()
         }
         // jesli uzytkownik nie ma prawa => 403
-        if(required && !roles.includes(user.role)){
+        if(required && !roles.includes(user.role)&& !groups.includes(user.groups)){
             return res.status(403).end()
         }
         req.logIn(user, {session: false}, (err) => {
