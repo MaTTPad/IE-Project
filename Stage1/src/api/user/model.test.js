@@ -1,1 +1,0 @@
-// Tu definiujemy Testy modelu

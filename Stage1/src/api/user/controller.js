@@ -65,7 +65,6 @@ const createUser = ({ body }, res, next) => {
 }
 
 const auth = (req, res, next) => {
-    console.log(5 + 6);
     // na typ etapie mamy dostep do uzytkownika w polu req.user
     // Haslo dziala tylko przy logowaniu, wiec dalsza komunikacja jest z tokenem
     // Tworzymy i odsylamy nowy token
