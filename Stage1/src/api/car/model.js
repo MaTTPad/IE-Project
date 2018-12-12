@@ -13,18 +13,20 @@ const carmodelSchema = new Schema({
     },
     VIN: {
         type: String,
-        required: false
+        required: true
     },
     doors: {
         type: Number,
-        required: false
+        required: true
     },
     class: {
         type: String,
-        required: false
+        required: true
     },
     reservations: {
-        type: [Reservation]
+        type: [Reservation],
+        required: false
+
     }
 }, {
     timestamps: true,
