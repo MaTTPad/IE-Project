@@ -12,6 +12,9 @@ const reservationSchema = new Schema({
     drop_off_date: {
         type: Date
     },
+    total_prize:{
+        type: Number
+    }
 })
 
 reservationSchema.methods = {
@@ -19,7 +22,8 @@ reservationSchema.methods = {
         const view = {
             id: this._id,
             from: this.from,
-            to: this.to
+            to: this.to,
+            total_prize:this.total_prize
         }
 
         return user.role === 'admin' ? {...view, user: this.user} : view

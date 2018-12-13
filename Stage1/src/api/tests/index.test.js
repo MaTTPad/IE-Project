@@ -101,7 +101,8 @@ describe('User and car test', () => {
                 model: 'A4',
                 VIN: 'AUUZZZ8147164',
                 doors: 5,
-                class: 'Sedan'
+                class: 'Sedan',
+                prize_per_hour : 100
             }
             chai.request(server)
                 .post('/api/cars')
@@ -142,7 +143,8 @@ describe('User and car test', () => {
         it('It should add new reservation.', (done) => {
             let reservation = {
                 pick_up_date: "Janary 24, 2019 03:00:01",
-                drop_off_date: "January 28, 2019 09:00:00"
+                drop_off_date: "January 28, 2019 09:00:00",
+
             }
 
             chai.request(server)
