@@ -13,7 +13,8 @@ chai.use(chaiHttp);
 
 describe('User and car test', () => {
     token = ''
-    carID= ' '
+    carID= ''
+    reservationID= ''
 
     before((done) => { //Before each test we empty the database
         User.deleteMany({}, (err) => {
@@ -102,7 +103,7 @@ describe('User and car test', () => {
                 VIN: 'AUUZZZ8147164',
                 doors: 5,
                 class: 'Sedan',
-                prize_per_hour : 100
+                price_per_hour : 100
             }
             chai.request(server)
                 .post('/api/cars')
@@ -143,7 +144,7 @@ describe('User and car test', () => {
         it('It should add new reservation.', (done) => {
             let reservation = {
                 pick_up_date: "Janary 24, 2019 03:00:01",
-                drop_off_date: "January 28, 2019 09:00:00",
+                drop_off_date: "January 24, 2019 09:00:00",
 
             }
 
@@ -155,12 +156,26 @@ describe('User and car test', () => {
                     res.should.have.status(200);
                     res.body.should.be.an('array');
                     res.body[0].should.have.property('id');
-
+                    reservationID=res.body[0].id
+                    res.body[0].total_price.should.be.equal(600)
                     done();
                 });
         });
     })
 
+
+
+    describe('DELETE /api/car/:id/reservations/:reservationID', () => {
+        it('It should delete reservation', (done) => {
+            chai.request(server)
+                .delete('/api/cars/'+carID+'/reservations/'+reservationID)
+                .set('Authorization', `Bearer ${token}`)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+    });
 
 
     describe('DELETE /api/car/:id', () => {
@@ -170,12 +185,6 @@ describe('User and car test', () => {
                 .set('Authorization', `Bearer ${token}`)
                 .end((err, res) => {
                     res.should.have.status(204);
-                    // res.body.should.be.an('array');
-                    // res.body[0].should.have.property('id');
-                    // res.body[0].should.have.property('manufacturer');
-                    // res.body[0].should.have.property('model');
-                    // res.body[0].should.have.property('VIN');
-                    // carID = res.body[0].id
                     done();
                 });
         });

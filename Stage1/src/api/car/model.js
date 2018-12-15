@@ -24,7 +24,7 @@ const carmodelSchema = new Schema({
         type: String,
         required: true
     },
-    prize_per_hour:{
+    price_per_hour:{
       type: Number,
       required : true
     },
@@ -45,7 +45,7 @@ carmodelSchema.methods = {
             manufacturer: this.manufacturer,
             model: this.model,
             VIN: this.VIN,
-            prize_per_hour: this.prize_per_hour
+            price_per_hour: this.price_per_hour
         }
 
         return full ? {

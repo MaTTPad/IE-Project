@@ -21,7 +21,7 @@ const createReservation = async (req, res, next) => {
     const newPickUpDate = new Date(pick_up_date)
     const newDropOffDate = new Date(drop_off_date)
     let numberOfHoursCeil =(newDropOffDate - newPickUpDate)/(1000*3600);
-    const total_prize = Math.ceil(numberOfHoursCeil) * car.prize_per_hour;
+    const total_prize = Math.ceil(numberOfHoursCeil) * car.price_per_hour;
 
     for (var i = 0; i < car.reservations.length; i++) {
         var tempCar = car.reservations[i];
@@ -56,7 +56,7 @@ const createReservation = async (req, res, next) => {
             user: user._id,
             pick_up_date:pick_up_date,           // tozsame z  from: from
             drop_off_date:drop_off_date,
-            total_prize:total_prize
+            total_price:total_prize
         })
     } catch (e) {
         // Poleci wyjatek kiedy daty beda nieprawidlowe (skladniowo)
