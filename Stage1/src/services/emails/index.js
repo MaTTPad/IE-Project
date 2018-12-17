@@ -42,4 +42,5 @@ const sendmail = (to, subject, content) => {
     })
 }
 
+
 module.exports = sendmail

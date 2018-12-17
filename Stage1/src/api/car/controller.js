@@ -42,12 +42,10 @@ const search = ({query}, res, next) => {
             case 'model':
                 dbquery.push({"model": {$regex: new RegExp(`${query['model']}`), $options: 'i'}})
                 break;
-           /* case 'yearmin':
-                dbquery.push({"year": {$gte: parseInt(query['yearmin']) }})
+            case 'class':
+                dbquery.push({"class": {$regex: new RegExp(`${query['class']}`), $options: 'i'} })
                 break;
-            case 'yearmax':
-                dbquery.push({"year": {$lte: parseInt(query['yearmax']) }})
-                break;*/
+
         }
     }
 
