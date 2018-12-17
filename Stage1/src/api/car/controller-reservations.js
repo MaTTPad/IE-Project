@@ -10,14 +10,12 @@ const createReservation = async (req, res, next) => {
     const {id} = req.params
 
     let car = await Carmodel.findById(id).exec()
-    if(car === null) return notFound(res)(car)          // wykorzystujemy te same funckje pomocnicze co poprzednio w Promisach
-
-    const reservationId = ObjectId()        // albo nadamy ID sami, albo pobierzemy je potem z tablicy
-
+    if(car === null) return notFound(res)(car)
+    const reservationId = ObjectId()
 
 
 
-    // Sprawdz daty
+
     const newPickUpDate = new Date(pick_up_date)
     const newDropOffDate = new Date(drop_off_date)
     let numberOfHoursCeil =(newDropOffDate - newPickUpDate)/(1000*3600);
@@ -54,31 +52,16 @@ const createReservation = async (req, res, next) => {
         car.reservations.push({
             _id: reservationId,
             user: user._id,
-            pick_up_date:pick_up_date,           // tozsame z  from: from
+            pick_up_date:pick_up_date,
             drop_off_date:drop_off_date,
             total_price:total_prize
         })
     } catch (e) {
-        // Poleci wyjatek kiedy daty beda nieprawidlowe (skladniowo)
-        //
         return res.status(400).end();
     }
 
     user.reservations.push(reservationId)
 
-    // Wersja asynchroniczna - 25ms
-    // {
-    //     Promise.all([
-    //         car.save(),
-    //         user.save()
-    //     ]).then(result => result[0])
-    //         .then(result => result.reservations.map(r => r.viewBy(user)))
-    //         .then(success(res))
-    //         .catch(next)
-    // }
-
-    // Wersja synchroniczna - 32 ms
-    // Brakuje sprawdzenia poprawnosci w callbackach!
     {
         await car.save()
         await user.save()
@@ -100,9 +83,7 @@ const showReservationByCarId = (req, res, next) => {
 const destroyReservation = async (req, res, next) => {
     const {id, reservationId} = req.params
 
-    // findOne(condition, callback)
-    // -> findOne(condition, projection, callback)
-    // findOne(condition, projection, options, callback)
+
     let car = await Carmodel.findOne({_id : id}, {reservations: {$elemMatch: {_id: reservationId}}})
     if(car === null || car.reservations.length === 0){
         return notFound(res)(null)

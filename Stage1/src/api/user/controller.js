@@ -19,20 +19,14 @@ const showUserById = ({ params }, res, next) =>
     .catch(next)
 
 const showMyReservations = async ({user, res, next}) => {
-    // Pobierz wszystkie rezerwacje uzytkownika
     const query = await User.findById(user.id, {  reservations: 1 })  // tylko pole reservation
 
-    // Dla kazdej rezerwacji
-    // Znajdz wszystkie samochody ktorych reservations id pasuje do podanego ID - zwraca samochody
-    // Wybierz tylko te elementy tablicy rezerwacji które pasuja do danego ID: reservations: {$elemMatch: {_id: reserv}
-    // Do wynikow dodaj: model, manufacturer i id
-    // Rozwin manufacturer
+
     const queries = query.reservations.map(reserv =>
         Carmodel.findOne({'reservations._id' : reserv}, {reservations: {$elemMatch: {_id: reserv}}, model: 1, _id: 1})
                 .populate( 'name')
                 .exec())
 
-    // Jesli chcielibysmy to pogrupowac po modelu, to albo recznie albo zastosowac aggregation framework
 
     Promise.all(queries)
         .then(results => results.map(result =>
@@ -65,9 +59,6 @@ const createUser = ({ body }, res, next) => {
 }
 
 const auth = (req, res, next) => {
-    // na typ etapie mamy dostep do uzytkownika w polu req.user
-    // Haslo dziala tylko przy logowaniu, wiec dalsza komunikacja jest z tokenem
-    // Tworzymy i odsylamy nowy token
     const { user } = req
     sign(user)
         .then((token) => ({token, user: user.view(true)}))

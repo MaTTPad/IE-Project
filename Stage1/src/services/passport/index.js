@@ -5,21 +5,6 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 const {jwtSecret} = require('../../config')
 const User = require('../../api/user/model').model
 
-/*
- PassportJS działa w oparciu o strategie - pluginy
- Dla każdego typu uwierzytelnienia potrzeba zarejestrować strategie i stworzyć middleware z niej korzystający
- Rejestracja strategii wiaze się z koniecznościa pobrania uzytkownika z bazy lub zwrocenia bledu
-
- Uwierzytelnienie w tej aplikacji:
- Login i hasło za pomocą BasicAuth, Backend zwraca token, każdy następny req juwierzytelniony tokenem.
-
- Czy pobieranie uzytwkonika z bazy przy każdym req jest konieczne?
- Poprawny token nie oznacza ze uzykownik jest ciagle w systemie lub nie zostal zablokowany
- Czy nie jest to obciazenie dla aplikacji?
- To zależy od aplikacji i ilości uzytkowników. Jeśli zacznie stanowić to problem można użyc cachu opartego o Redis.
- */
-
-// Middleware dla uwierzytelnienia hasłem
 const password = () => (req, res, next) =>
     passport.authenticate('password', {session: false}, (err, user, info) => {
         if (err && err.param) {
@@ -33,15 +18,14 @@ const password = () => (req, res, next) =>
         })
     })(req, res, next)
 
-// Middleware dla tokenu JWT
-const token = ({required, roles = User.roles, groups=User.groups} = {}) => (req, res, next) =>
+const token = ({required, roles = User.roles, groups=User.userGroups2} = {}) => (req, res, next) =>
     passport.authenticate('token', {session: false}, (err, user, info) => {
         // jesli nie ma uzytkownika w bazie lub niepodano tokenu => 401
         if (err || (required && !user)) {
             return res.status(401).end()
         }
         // jesli uzytkownik nie ma prawa => 403
-        if(required && !roles.includes(user.role)&& !groups.includes(user.groups)){
+        if(required && !roles.includes(user.role) || !groups.includes(user.userGroup)){
             return res.status(403).end()
         }
         req.logIn(user, {session: false}, (err) => {
@@ -50,7 +34,6 @@ const token = ({required, roles = User.roles, groups=User.groups} = {}) => (req,
         })
     })(req, res, next)
 
-// Rejestracja strategii logowania hasłem
 passport.use('password', new BasicStrategy((email, password, done) => {
     User.findOne({email}).then((user) => {
         if (!user) {
@@ -64,9 +47,8 @@ passport.use('password', new BasicStrategy((email, password, done) => {
     })
 }))
 
-// Rejestracja strategii tokenu JWT
 passport.use('token', new JwtStrategy({
-    secretOrKey: jwtSecret,                 // Klucz szyfrujacy lub haslo
+    secretOrKey: jwtSecret,
     jwtFromRequest: ExtractJwt.fromExtractors([
         ExtractJwt.fromUrlQueryParameter('access_token'),
         ExtractJwt.fromBodyField('access_token'),
@@ -78,8 +60,7 @@ passport.use('token', new JwtStrategy({
 }, (payload, done) => {
     const {id} = payload
     User.findById(id).then((user) => {
-        // Tu mozna sprawdzic np. czy uzytkownik nie zostal zablokowany
-        done(null, user)        // done is a passport error first callback accepting arguments done(error, user, info)
+        done(null, user)
         return null
     }).catch(done)
 }))

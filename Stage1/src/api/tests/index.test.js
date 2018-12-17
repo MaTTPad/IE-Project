@@ -3,7 +3,6 @@ const User = require('../user/model').model
 const Car = require('../car/model').model
 const mongoose = require('../../services/mongoose/index')
 
-//Require the dev-dependencies
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 
@@ -16,7 +15,7 @@ describe('User and car test', () => {
     carID= ''
     reservationID= ''
 
-    before((done) => { //Before each test we empty the database
+    before((done) => {
         User.deleteMany({}, (err) => {
             Car.deleteMany({}, (err) => {
                 done();
@@ -82,18 +81,6 @@ describe('User and car test', () => {
                 });
         });
     });
-
-//});
-
-
-// describe('Car', () => {
-//     token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjMTEwN2RjZjg2YWY5MjJlNGExNGIyMyIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNTQ0NjE5OTk2fQ.N03Lek8zYO1rtQ8Wzm0ZHZi0tqB8VQ23DtyA55vrlYo'
-//
-//     before((done) => { //Before each test we empty the database
-//         Car.deleteMany({}, (err) => {
-//             done();
-//         });
-//     });
 
     describe('POST /api/cars', () => {
         it('It should add new car.', (done) => {

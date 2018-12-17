@@ -43,7 +43,5 @@ router.delete('/:id/reservations/:reservationId',
     destroyReservation
 )
 
-//
-
 
 module.exports = router

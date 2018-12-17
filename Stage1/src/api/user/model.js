@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const roles = ['user', 'admin']
-const groups=['onlineUser', 'localUser']
+const userGroups=['onlineUser', 'localUser']
+const userGroups2=['onlineUser']
 const Carmodel = require('../car/model').model
 
 const Schema = mongoose.Schema
@@ -35,9 +36,9 @@ const userSchema = new Schema({
         enum: roles,
         default: 'user'
     },
-    group: {
+    userGroup: {
         type: String,
-        enum: groups,
+        enum: userGroups,
         default: 'onlineUser'
     },
     reservations: {
@@ -66,7 +67,7 @@ userSchema.methods = {
         let fields = ['id', 'name','lastname']
 
         if (full) {
-            fields = [...fields, 'role', 'email', 'reservations']
+            fields = [...fields, 'role', 'userGroup', 'email', 'reservations']
         }
 
         fields.forEach((field) => {
@@ -92,7 +93,7 @@ userSchema.methods = {
 }
 
 userSchema.statics = {
-    roles, groups
+    roles, userGroups, userGroups2
 }
 
 const model = mongoose.model('User', userSchema)
