@@ -1,4 +1,6 @@
 const { success, notFound } = require('../../services/response/')
+const { sendmail } = require('../../services/emails/')
+
 const User = require('./model').model
 const Carmodel = require('../car/model').model
 const { sign } = require('../../services/jwt')
@@ -81,7 +83,19 @@ const deleteUserById = ({ params }, res, next) =>
     .then(success(res, 204))
     .catch(next)
 
+const sendMail = ({ body }, res, next) => {
+   sendmail(body.to, body.subject, body.content)
+        // .then(user => {
+        //     sign(user)
+        //         .then((token) => ({ token, user: user.view(true) }))
+        //         .then(success(res, 201))
+        // })
+       //.then(success(res, 201))
+      // .catch((err) => catchDuplicateEmail(res, err, next))
+}
+
+
 module.exports = {
-    createUser, showAllUsers, showUserById, updateUserById, deleteUserById, showMe, auth, showMyReservations
+    createUser, showAllUsers, showUserById, updateUserById, deleteUserById, showMe, auth, showMyReservations, sendMail
 }
 

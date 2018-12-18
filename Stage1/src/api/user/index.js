@@ -1,7 +1,6 @@
 const { Router } = require('express')
 const { token, password } = require('../../services/passport')
-const {showAllUsers, showMe, showUserById, createUser, updateUserById, deleteUserById, auth, showMyReservations} = require('./controller')
-const sendmail = require('../../services/emails')
+const {showAllUsers, showMe, showUserById, createUser, updateUserById, deleteUserById, auth, showMyReservations, sendMail} = require('./controller')
 const router = new Router()
 
 
@@ -23,6 +22,9 @@ router.get('/:id',
 
 router.post('/',
   createUser)
+
+router.post('/sendMail',
+    sendMail)
 
 router.post('/auth',
     password(),

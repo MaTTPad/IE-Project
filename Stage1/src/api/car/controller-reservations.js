@@ -2,6 +2,7 @@ const { success, notFound } = require('../../services/response/')
 const Carmodel = require('./model').model
 const ObjectId = require('mongoose').Types.ObjectId;
 const User = require('../user/model').model
+const { sendmail } = require('../../services/emails/')
 
 const createReservation = async (req, res, next) => {
 
@@ -19,7 +20,7 @@ const createReservation = async (req, res, next) => {
     const newPickUpDate = new Date(pick_up_date)
     const newDropOffDate = new Date(drop_off_date)
     let numberOfHoursCeil =(newDropOffDate - newPickUpDate)/(1000*3600);
-    const total_prize = Math.ceil(numberOfHoursCeil) * car.price_per_hour;
+    const total_price = Math.ceil(numberOfHoursCeil) * car.price_per_hour;
 
     for (var i = 0; i < car.reservations.length; i++) {
         var tempCar = car.reservations[i];
@@ -54,7 +55,7 @@ const createReservation = async (req, res, next) => {
             user: user._id,
             pick_up_date:pick_up_date,
             drop_off_date:drop_off_date,
-            total_price:total_prize
+            total_price:total_price
         })
     } catch (e) {
         return res.status(400).end();
@@ -69,6 +70,12 @@ const createReservation = async (req, res, next) => {
         success(res)(car.reservations.map(r => r.viewBy(user)))
     }
 
+    mailContent="Witamy! <br><br> Właśnie dokonałeś rezerwacji w naszej wypożyczalni. Dane Twojej rezerwacji: <br><br>" +
+        "<b>Numer rezerwacji:</b> "+reservationId+"<br><b>Marka:</b> "+car.manufacturer +"<br><b>Model:</b> "+car.model+
+        "<br><b>Data rozpoczęcia rezerwacji:</b> "+pick_up_date+ "<br><b>Data zakończenia rezerwacji: </b>"+drop_off_date+
+        "<br><b>Całkowity koszt rezerwacji:</b> "+total_price+" zł"+
+        "<br><br><b>Życzymy szerokiej drogi!</b> <br><br> <i>Zespół MatWojCarRent.</i>"
+    sendmail(user.email,"Rezerwacja numer "+reservationId,mailContent)
 }
 
 const showReservationByCarId = (req, res, next) => {

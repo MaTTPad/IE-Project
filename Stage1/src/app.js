@@ -20,9 +20,6 @@ function stop() {
   server.close()
 }
 
-// const content = `<html>Hello <strong>Krzysztof</strong></html>`
-// sendmail('kbzowski@agh.edu.pl', 'System Is Online!', content)
-
 
 module.exports = app
 module.exports.stop = stop

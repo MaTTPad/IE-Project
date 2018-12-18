@@ -1,7 +1,7 @@
 // Konfiguracja aplikacji
 
 const path = require('path')
-const merge = require('lodash/merge')  // biblioteka Lodash: https://lodash.com/
+const merge = require('lodash/merge')
 
 const config = {
     all: {
@@ -18,10 +18,10 @@ const config = {
             }
         },
         mail: {
-            from: 'IE Wykład <inzyniera.internetu.2018@gmail.com>',
+            from: 'Car Rental <2m32017.2@gmail.com>',
             auth: {
-                user: 'cyputywnpc3bmloc@ethereal.email',
-                pass: 'E36JzCA9xBEqnB7hk7'
+                user: '2m32017.2@gmail.com',
+                pass: process.env.PASSWORD
             }
         },
 
@@ -39,19 +39,27 @@ const config = {
                 debug: true
             }
         },
-        jwtSecret: '48mXwHcnH8qEwWgzo24y5BEIxgAU0a'
+        jwtSecret: '48mXwHcnH8qEwWgzo24y5BEIxgAU0a',
+        mail: {
+            from: 'Car Rental <2m32017.2@gmail.com>',
+            auth: {
+                user: '2m32017.2@gmail.com',
+                pass: process.env.PASSWORD
+            }
+        },
     },
     production: {
         ip: process.env.IP || undefined,
         port: process.env.PORT || 8080,
         mongo: {
-            uri: 'mongodb://admin:zaq12wsx@ds161653.mlab.com:61653/carrental',       // Realny adres bazy
+            uri: 'mongodb://admin:zaq12wsx@ds161653.mlab.com:61653/carrental',
         },
-        jwtSecret: process.env.SECRET,       // Nigdy nie trzymamy hasel do produkcji w konfiguracji!
+        jwtSecret: process.env.SECRET,
         mail: {
+            from: 'Car Rental <2m32017.2@gmail.com>',
             auth: {
-                user: 'inzyniera.internetu.2018@gmail.com',
-                pass: 'aghis2018'
+                user: '2m32017.2@gmail.com',
+                pass: process.env.PASSWORD
             }
         }
     }
