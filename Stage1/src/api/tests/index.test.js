@@ -26,7 +26,7 @@ describe('User and car test', () => {
     describe('POST /api/users', () => {
         it('It should register user.', (done) => {
             let user = {
-                email: 'test@gmail.com',
+                email: 'mpadula06@gmail.com',
                 name: 'Jan',
                 lastname:'Kowalski',
                 role: 'admin',
@@ -44,7 +44,7 @@ describe('User and car test', () => {
                     res.body.user.should.have.property('id');
                     res.body.user.should.have.property('name').equal('Jan');
                     res.body.user.should.have.property('lastname').equal('Kowalski');
-                    res.body.user.should.have.property('email').equal('test@gmail.com');
+                    res.body.user.should.have.property('email').equal('mpadula06@gmail.com');
                     res.body.user.should.have.property('reservations');
                     res.body.user.reservations.should.be.an('array').to.be.empty;
 
@@ -58,7 +58,7 @@ describe('User and car test', () => {
         it('It should login user.', (done) => {
             chai.request(server)
                 .post('/api/users/auth')
-                .auth('test@gmail.com', '123456789')
+                .auth('mpadula06@gmail.com', '123456789')
                 .end((err, res) => {
                     res.should.have.status(201);
                     res.body.should.be.a('object');
@@ -85,12 +85,12 @@ describe('User and car test', () => {
     describe('POST /api/cars', () => {
         it('It should add new car.', (done) => {
             let car = {
-                manufacturer: 'Audi',
-                model: 'A4',
+                manufacturer: 'Volkswagen',
+                model: 'Golf',
                 VIN: 'AUUZZZ8147164',
                 doors: 5,
                 class: 'Sedan',
-                price_per_hour : 100
+                price_per_hour : 30
             }
             chai.request(server)
                 .post('/api/cars')
@@ -100,8 +100,8 @@ describe('User and car test', () => {
                     res.should.have.status(201);
                     res.body.should.be.an('object');
                     res.body.should.have.property('id');
-                    res.body.should.have.property('manufacturer').equal('Audi');
-                    res.body.should.have.property('model').equal('A4');
+                    res.body.should.have.property('manufacturer').equal('Volkswagen');
+                    res.body.should.have.property('model').equal('Golf');
                     res.body.should.have.property('reservations');
                     res.body.reservations.should.be.an('array').to.be.empty;
                     done();
@@ -144,7 +144,7 @@ describe('User and car test', () => {
                     res.body.should.be.an('array');
                     res.body[0].should.have.property('id');
                     reservationID=res.body[0].id
-                    res.body[0].total_price.should.be.equal(600)
+                    res.body[0].total_price.should.be.equal(180)
                     done();
                 });
         });
